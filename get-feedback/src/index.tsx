@@ -1,10 +1,10 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
+import {App} from "./App"
 
-const App = (): any => <h1>HERE</h1>
 
 const node = document.createElement('div')
 
-ReactDOM.render(App(), node)
+ReactDOM.render(<App />, node)
 
 document.body.append(node)

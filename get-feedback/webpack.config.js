@@ -17,6 +17,11 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         use: ['babel-loader', 'ts-loader'],
       },
+      {
+        test: /\.jsx?$/,
+        exclude: /(node_modules|bower_components)/,
+        use: ['babel-loader'],
+      },
     ],
   },
   plugins: [

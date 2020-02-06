@@ -14,7 +14,9 @@
   "dependencies": {
     "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.5",
+    "crocks": "^0.12.4",
     "mobx": "^5.15.4",
+    "ramda": "^0.27.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "ts-loader": "^6.2.1"
