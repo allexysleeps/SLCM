@@ -3,8 +3,15 @@ import { ReactComponentElement, ReactElement } from 'react'
 import * as R from 'ramda'
 import styled from '@emotion/styled'
 import { Input } from '../Inputs/Input'
-import { InputType, FormBuilderProps, FormInput, FormStructure } from "../../general-types"
-import { InputProps } from "../Inputs/types"
+import { FormBuilderProps, FormInput, FormStructure } from "../../types"
+import { InputProps } from "../Inputs/input-types"
+import {evolveFromAllObject} from "../../utils/helpers"
+import {
+  FieldStateToInputPropsTransformations,
+  FormValues,
+  InputState,
+  InputToStateTransformations
+} from "./form-builder-types"
 
 const { useState } = React
 
@@ -14,29 +21,15 @@ const Form = styled.form`
   border: ${R.pathOr('', ['theme', 'general', 'border'])};
 `
 
-interface FormValues {
-  [key: string]: InputState
-}
+const getStateFromStructure = (structure: FormStructure): FormValues => {
+  const reduceFormStructureToFormValues = (values: FormValues, input: FormInput) => R.assoc(
+    input.name,
+    evolveFromAllObject<InputToStateTransformations, FormInput, InputState>({ value: R.propOr(null, 'defaultValue')}, input),
+    values
+  )
 
-interface InputState {
-  type: InputType
-  value: any
-  placeholder?: string
-  touched?: boolean
-  validation?: any
-}
-
-interface FieldStateToInputPropsTransformations {
-  onChange?(): Function
-  value?(): any
-  key?(): string
-  placeholder?(): string
-  label?(): string
-}
-
-const getDefaultStateFromStructure = (structure: FormStructure): FormValues => {
   return R.compose(
-    R.reduce((acc, { name, ...rest }: FormInput) => R.assoc(name, { value: null, ...rest }, acc), {}),
+    R.reduce(reduceFormStructureToFormValues, {}),
     R.defaultTo([])
   )(structure.inputs)
 }
@@ -67,7 +60,7 @@ const renderFields = (values: FormValues, changeHandler: Function): ReactCompone
 }
 
 export const FormBuilder = ({ structure }: FormBuilderProps): ReactElement => {
-  const [values, setValues] = useState(getDefaultStateFromStructure(structure))
+  const [values, setValues] = useState(getStateFromStructure(structure))
   const setValue = createValueSetter(setValues)
   return (
     <Form>

@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as R from 'ramda'
 import { ThemeProvider } from "emotion-theming"
 import { FormBuilder } from "./components/FormBuilder/FormBuilder"
-import {FormStructure} from "./general-types"
+import {AppStatus, FormStructure} from "./types"
 import {graphqlClient} from "./graphql-client/client"
 import {structureQuery} from "./graphql-client/queries"
 import {EffectCallback} from "react"
@@ -21,19 +21,7 @@ export const defaultTheme = {
   }
 }
 
-interface StructureResponseData {
-  formSnippet: FormStructure
-}
 
-interface StructureQueryResponse {
-  data: StructureResponseData
-}
-
-enum AppStatus {
-  LOADING ='LOADING',
-  READY ='READY',
-  FAIL ='FAIL',
-}
 
 const fetchData = (setState: Function) : EffectCallback => (): void => {
   graphqlClient.query({ query:  structureQuery })

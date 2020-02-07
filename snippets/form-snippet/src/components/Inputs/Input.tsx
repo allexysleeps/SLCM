@@ -1,8 +1,8 @@
 import * as React from 'react'
 import * as R from 'ramda'
 import { TextInput } from "./TextInput/TextInput"
-import { InputType } from "../../general-types"
-import { InputProps } from "./types"
+import { InputType } from "../../types"
+import { InputProps } from "./input-types"
 import { EmailInput } from "./EmailInput/EmailInput"
 import { PasswordInput } from "./PasswordInput/PasswordInput"
 

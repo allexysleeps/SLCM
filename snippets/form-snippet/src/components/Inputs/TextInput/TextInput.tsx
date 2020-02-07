@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { TextInputProps, TextInputType } from "../types"
+import { TextInputProps, TextInputType } from "../input-types"
 
 const Input = styled.input`
   display: block;

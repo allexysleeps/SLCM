@@ -18,3 +18,21 @@ export enum InputType {
     EMAIL="EMAIL",
     PASSWORD="PASSWORD"
 }
+
+export interface FormSnippetData {
+  structure: FormStructure
+}
+
+export interface StructureResponseData {
+  formSnippet: FormSnippetData
+}
+
+export interface StructureQueryResponse {
+  data: StructureResponseData
+}
+
+export enum AppStatus {
+  LOADING ='LOADING',
+  READY ='READY',
+  FAIL ='FAIL',
+}
