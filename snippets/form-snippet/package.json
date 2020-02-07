@@ -1,5 +1,5 @@
 {
-  "name": "get-feedback",
+  "name": "form-snippet",
   "version": "1.0.0",
   "description": "",
   "main": "webpack.config.js",
@@ -16,11 +16,9 @@
     "@emotion/styled": "^10.0.27",
     "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.5",
-    "crocks": "^0.12.4",
     "emotion": "^10.0.27",
     "emotion-theming": "^10.0.27",
-    "mobx": "^5.15.4",
-    "ramda": "^0.27.0",
+    "ramda": "^0.26.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "ts-loader": "^6.2.1"

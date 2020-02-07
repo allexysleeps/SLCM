@@ -45,7 +45,7 @@ const createValueSetter = R.curry((setValues: Function, key: string, value: any)
   setValues(R.assocPath([key, 'value'], value))
 })
 
-const mapFieldStateToInputProps = (transformations: FieldStateToInputPropsTransformations = {}): Function => (state: InputState): InputProps =>
+const mapFieldStateToInputProps = (transformations: FieldStateToInputPropsTransformations): Function => (state: InputState): InputProps =>
   R.converge(R.mergeRight, [R.identity, R.applySpec(transformations)])(state)
 
 const renderFields = (values: FormValues, changeHandler: Function): ReactComponentElement<any, InputProps> [] => {

@@ -14,7 +14,7 @@ export interface FormInput {
 }
 
 export enum InputType {
-    TEXT,
-    EMAIL,
-    PASSWORD
+    TEXT="TEXT",
+    EMAIL="EMAIL",
+    PASSWORD="PASSWORD"
 }

@@ -1,0 +1,24 @@
+extend type Query {
+  formSnippet: FormSnippetQuery
+}
+
+type FormSnippetQuery {
+  structure(userId: String, formId: String): FormSnippetStructure
+}
+
+type FormSnippetStructure {
+  inputs: [Input]!
+}
+
+type Input {
+  type: InputType!
+  name: String!
+  label: String
+  placeholder: String
+}
+
+enum InputType {
+  TEXT
+  EMAIL
+  PASSWORD
+}
