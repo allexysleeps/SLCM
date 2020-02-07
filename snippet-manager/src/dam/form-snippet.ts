@@ -16,12 +16,15 @@ export enum InputType {
   PASSWORD="PASSWORD"
 }
 
-
 const defaultFormStructure: FormStructure = {
   inputs: [
     { type: InputType.TEXT, name: 'name', placeholder: 'enter name' },
     { type: InputType.EMAIL, name: 'email', placeholder: 'enter email' },
-    { type: InputType.PASSWORD, name: 'password', placeholder: 'enter password' }
+    { type: InputType.PASSWORD, name: 'password', placeholder: 'enter password' },
+    { type: InputType.PASSWORD, name: 'password1', placeholder: 'enter password' },
+    { type: InputType.PASSWORD, name: 'password2', placeholder: 'enter password' },
+    { type: InputType.PASSWORD, name: 'password3', placeholder: 'enter password' },
+    { type: InputType.PASSWORD, name: 'password4', placeholder: 'enter password' },
   ]
 }
 

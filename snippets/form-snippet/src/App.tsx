@@ -1,17 +1,19 @@
 import * as React from 'react'
+import * as R from 'ramda'
 import { ThemeProvider } from "emotion-theming"
 import { FormBuilder } from "./components/FormBuilder/FormBuilder"
-import { InputType, FormStructure } from "./general-types"
+import {FormStructure} from "./general-types"
+import {graphqlClient} from "./graphql-client/client"
+import {structureQuery} from "./graphql-client/queries"
+import {EffectCallback} from "react"
 
-const defaultStructure: FormStructure = {
-  inputs: [
-    { type: InputType.TEXT, name: 'name', placeholder: 'enter name' },
-    { type: InputType.EMAIL, name: 'email', placeholder: 'enter email' },
-    { type: InputType.PASSWORD, name: 'password', placeholder: 'enter password' }
-  ]
+const { useState, useEffect } = React
+
+export const defaultStructure: FormStructure = {
+  inputs: []
 }
 
-const defaultTheme = {
+export const defaultTheme = {
   general: {
     background: '#fffff',
     border: '1px solid #cacaca',
@@ -19,10 +21,44 @@ const defaultTheme = {
   }
 }
 
+interface StructureResponseData {
+  formSnippet: FormStructure
+}
+
+interface StructureQueryResponse {
+  data: StructureResponseData
+}
+
+enum AppStatus {
+  LOADING ='LOADING',
+  READY ='READY',
+  FAIL ='FAIL',
+}
+
+const fetchData = (setState: Function) : EffectCallback => (): void => {
+  graphqlClient.query({ query:  structureQuery })
+    .then((data) => {
+      const structure = R.compose(
+        R.pick(['inputs']), R.pathOr(defaultStructure, ['data', 'formSnippet', 'structure'])
+      )(data)
+      setState(R.mergeDeepLeft({
+        structure,
+        status: AppStatus.READY
+      }))
+    })
+}
+
 export const App = () => {
-  return (
-    <ThemeProvider theme={defaultTheme}>
-      <FormBuilder structure={defaultStructure}/>
+  const [appState, setState] = useState({
+    structure: defaultStructure,
+    theme: defaultTheme,
+    status: AppStatus.LOADING
+  })
+  useEffect(fetchData(setState), [])
+
+  return appState.status === AppStatus.READY && (
+    <ThemeProvider theme={appState.theme}>
+      <FormBuilder structure={appState.structure}/>
     </ThemeProvider>
   )
 }
