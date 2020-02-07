@@ -1,40 +1,62 @@
 import * as React from 'react'
+import { ReactComponentElement, ReactElement } from 'react'
 import * as R from 'ramda'
-import { getInputComponent } from '../Input/GetInputComponent'
-import {FieldType, FormBuilderProps, FormField, FormStructure} from "../../GeneralTypes"
-import {ReactComponentElement, ReactElement} from "react"
-import {InputProps} from "../Input/InputTypes"
+import styled from '@emotion/styled'
+import { Input } from '../Inputs/Input'
+import { InputType, FormBuilderProps, FormInput, FormStructure } from "../../general-types"
+import { InputProps } from "../Inputs/types"
 
-const {useState} = React
+const { useState } = React
 
-interface Values {
-  [key: string]: FieldValue
+const Form = styled.form`
+  background: ${R.pathOr('', ['theme', 'general', 'background'])};
+  padding: ${R.pathOr('', ['theme', 'general', 'padding'])};
+  border: ${R.pathOr('', ['theme', 'general', 'border'])};
+`
+
+interface FormValues {
+  [key: string]: InputState
 }
 
-interface FieldValue {
-  type: FieldType
+interface InputState {
+  type: InputType
   value: any
+  placeholder?: string
+  touched?: boolean
   validation?: any
-  touched?: any
 }
 
-const getDefaultStateFromStructure = (structure: FormStructure): Values => {
+interface FieldStateToInputPropsTransformations {
+  onChange?(): Function
+  value?(): any
+  key?(): string
+  placeholder?(): string
+  label?(): string
+}
+
+const getDefaultStateFromStructure = (structure: FormStructure): FormValues => {
   return R.compose(
-    R.reduce((acc, { name, ...rest } : FormField) => R.assoc(name, { value: null, ...rest }, acc), {}),
-    R.propOr([], 'fields')
-  )(structure)
+    R.reduce((acc, { name, ...rest }: FormInput) => R.assoc(name, { value: null, ...rest }, acc), {}),
+    R.defaultTo([])
+  )(structure.inputs)
 }
 
 const createValueSetter = R.curry((setValues: Function, key: string, value: any): void => {
   setValues(R.assocPath([key, 'value'], value))
 })
 
-const renderFields = (values: Values, changeHandler: Function): ReactComponentElement<any, InputProps> [] => {
+const mapFieldStateToInputProps = (transformations: FieldStateToInputPropsTransformations = {}): Function => (state: InputState): InputProps =>
+  R.converge(R.mergeRight, [R.identity, R.applySpec(transformations)])(state)
+
+const renderFields = (values: FormValues, changeHandler: Function): ReactComponentElement<any, InputProps> [] => {
   const tupleToComponent = (
     fieldComponents,
-    [key, { value, type }]: [string, FieldValue]
+    [key, { type, ...state }]: [string, InputState]
   ) => R.append(
-    getInputComponent(type, { onChange: changeHandler(key), key: key, value: value }),
+    Input.ofType(type, mapFieldStateToInputProps({
+      key: R.always(key),
+      onChange: R.always(changeHandler(key))
+    })(state)),
     fieldComponents
   )
 
@@ -44,12 +66,12 @@ const renderFields = (values: Values, changeHandler: Function): ReactComponentEl
   )(values)
 }
 
-export const FormBuilder = ({structure}: FormBuilderProps): ReactElement => {
+export const FormBuilder = ({ structure }: FormBuilderProps): ReactElement => {
   const [values, setValues] = useState(getDefaultStateFromStructure(structure))
   const setValue = createValueSetter(setValues)
-    return (
-    <form>
+  return (
+    <Form>
       {renderFields(values, setValue)}
-    </form>
+    </Form>
   )
 }

@@ -1,15 +1,28 @@
 import * as React from 'react'
-import {FormBuilder} from "./components/FormBuilder/FormBuilder"
-import {FieldType, FormStructure} from "./GeneralTypes"
+import { ThemeProvider } from "emotion-theming"
+import { FormBuilder } from "./components/FormBuilder/FormBuilder"
+import { InputType, FormStructure } from "./general-types"
 
 const defaultStructure: FormStructure = {
-    fields: [
-      { type: FieldType.TEXT, name: 'name' },
-      { type: FieldType.TEXT, name: 'email' },
-      { type: FieldType.TEXT, name: 'password' }
-    ]
+  inputs: [
+    { type: InputType.TEXT, name: 'name', placeholder: 'enter name' },
+    { type: InputType.EMAIL, name: 'email', placeholder: 'enter email' },
+    { type: InputType.PASSWORD, name: 'password', placeholder: 'enter password' }
+  ]
+}
+
+const defaultTheme = {
+  general: {
+    background: '#fffff',
+    border: '1px solid #cacaca',
+    boxShadow: 'none'
+  }
 }
 
 export const App = () => {
-    return <FormBuilder structure={defaultStructure}/>
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <FormBuilder structure={defaultStructure}/>
+    </ThemeProvider>
+  )
 }

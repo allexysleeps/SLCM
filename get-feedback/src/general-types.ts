@@ -3,17 +3,17 @@ export interface FormBuilderProps {
 }
 
 export interface FormStructure {
-    fields: FormField []
+    inputs: FormInput []
 }
 
-export interface FormField {
-    type: FieldType
+export interface FormInput {
+    type: InputType
     name: string
     label?: string
     placeholder?: string
 }
 
-export enum FieldType {
+export enum InputType {
     TEXT,
     EMAIL,
     PASSWORD
