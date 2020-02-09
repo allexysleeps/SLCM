@@ -1,9 +1,10 @@
-// todo move to shared repo
-export interface FormStructure {
+import mongoose, { Schema, Document } from 'mongoose'
+
+export interface FormStructure extends Document {
   inputs: FormInput []
 }
 
-export interface FormInput {
+export interface FormInput extends Document {
   type: InputType
   name: string
   label?: string
@@ -16,7 +17,36 @@ export enum InputType {
   PASSWORD="PASSWORD"
 }
 
-const defaultFormStructure: FormStructure = {
+
+const InputSchema = new Schema({
+  type: {
+    type: String,
+    enum: Object.values(InputType),
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  label: {
+    type: String,
+    required: false
+  },
+  placeholder: {
+    type: String,
+    required: false
+  }
+})
+
+const FormSnippetSchema = new Schema({
+  inputs: [InputSchema]
+})
+
+mongoose.model('FormSnippet', FormSnippetSchema)
+
+const FormSnippet = mongoose.model('FormSnippet')
+
+const sampleSnippet = new FormSnippet({
   inputs: [
     { type: InputType.TEXT, name: 'name', placeholder: 'enter name' },
     { type: InputType.EMAIL, name: 'email', placeholder: 'enter email' },
@@ -26,8 +56,10 @@ const defaultFormStructure: FormStructure = {
     { type: InputType.PASSWORD, name: 'password3', placeholder: 'enter password' },
     { type: InputType.PASSWORD, name: 'password4', placeholder: 'enter password' },
   ]
-}
+})
 
-export function getFormSnippetStructure(formId: string, userId): Promise<FormStructure> {
-  return Promise.resolve(defaultFormStructure)
+sampleSnippet.save()
+
+export function getFormSnippetStructure(formId: string, userId): Promise<Document> {
+  return FormSnippet.findOne().exec()
 }
