@@ -1,0 +1,45 @@
+extend type Query {
+  formSnippet: FormSnippetQuery
+}
+
+extend type Mutation {
+  formSnippetAdd(input: FormSnippetAddInput): FormSnippetStructure
+}
+
+input FormSnippetAddInput {
+  structure: FormsSnippetStructureInput
+}
+
+input FormsSnippetStructureInput {
+  inputs: [InputInput]!
+}
+
+
+type FormSnippetQuery {
+  structure(userId: String, formId: String): FormSnippetStructure
+}
+
+type FormSnippetStructure {
+  inputs: [Input]!
+}
+
+# fuck!)
+input InputInput {
+  type: InputType!
+  name: String!
+  label: String
+  placeholder: String
+}
+
+type Input {
+  type: InputType!
+  name: String!
+  label: String
+  placeholder: String
+}
+
+enum InputType {
+  TEXT
+  EMAIL
+  PASSWORD
+}

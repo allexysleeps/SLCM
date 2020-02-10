@@ -17,8 +17,8 @@ server.applyMiddleware({ app })
 mongooseConnect(
   () => {
     app.listen(
-      { port: 9000 },
-      () => console.log(`🚀 Server ready at http://localhost:9000${server.graphqlPath}`)
+      { port: 9001 },
+      () => console.log(`🚀 Server ready at http://localhost:9001${server.graphqlPath}`)
     )
   }
 )
