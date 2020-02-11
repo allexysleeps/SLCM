@@ -1,21 +1,8 @@
+import * as R from 'ramda'
 import {GraphQLResolverMap} from "apollo-graphql/src/schema/resolverMap"
-import {createFormSnippet} from "../dam/form-snippet"
+import { formResolvers } from './form-resolvers'
 
 
-export const resolvers: GraphQLResolverMap<{}> = {
-  Query: {
-    formSnippet() {
-      return {}
-    }
-  },
-  Mutation: {
-    formSnippetAdd() {
-      return createFormSnippet("id")
-    }
-  },
-  FormSnippetQuery: {
-    structure() {
-      return null
-    }
-  }
-}
+export const resolvers: GraphQLResolverMap = R.reduce(R.mergeDeepRight, {})([
+  formResolvers
+])

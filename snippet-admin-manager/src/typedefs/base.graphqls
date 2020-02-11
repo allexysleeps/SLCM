@@ -1,37 +1,40 @@
 extend type Query {
-  formSnippet: FormSnippetQuery
+  formSnippet(userId: String!, formId: String!): FormSnippetData
 }
 
 extend type Mutation {
-  formSnippetAdd(input: FormSnippetAddInput): FormSnippetStructure
+  formSnippetAdd(formData: FormSnippetInput!): FormSnippetData
+  formSnippetUpdate(formId: String, formData: FormSnippetInput): FormSnippetData
+  formSnippetRemove(formId: String): Boolean
 }
 
-input FormSnippetAddInput {
-  structure: FormsSnippetStructureInput
+input FormSnippetInput {
+  structure: FormSnippetStructureInput!
+  published: Boolean!
 }
 
-input FormsSnippetStructureInput {
-  inputs: [InputInput]!
+input FormSnippetStructureInput {
+  inputs: [InputStructureInput]!
 }
 
-
-type FormSnippetQuery {
-  structure(userId: String, formId: String): FormSnippetStructure
-}
-
-type FormSnippetStructure {
-  inputs: [Input]!
-}
-
-# fuck!)
-input InputInput {
+input InputStructureInput {
   type: InputType!
   name: String!
   label: String
   placeholder: String
 }
 
-type Input {
+type FormSnippetStructure {
+  inputs: [InputStructure]!
+}
+
+type FormSnippetData {
+  id: String
+  structure: FormSnippetStructure
+  published: Boolean
+}
+
+type InputStructure {
   type: InputType!
   name: String!
   label: String
