@@ -6,8 +6,6 @@ export function mongooseConnect(onConnect: (...args: any[]) => void = () => {}) 
     .on('error', (e) => console.log(e))
     .on('disconnected', (e) => {
       console.log(e)
-      console.log('HERE')
-      // mongooseConnect
     })
     .once('open', onConnect)
   return mongoose.connect('mongodb://localhost/snippets', {

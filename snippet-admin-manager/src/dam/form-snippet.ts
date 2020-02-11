@@ -17,6 +17,10 @@ export enum InputType {
   PASSWORD="PASSWORD"
 }
 
+interface FormStructureInput {
+  inputs?: FormStructure['inputs']
+}
+
 
 const InputSchema = new Schema({
   type: {
@@ -46,6 +50,12 @@ mongoose.model('FormSnippet', FormSnippetSchema)
 
 const FormSnippet = mongoose.model('FormSnippet')
 
-export function getFormSnippetStructure(formId: string, userId): Promise<Document> {
+export async function createFormSnippet(userId: string, formStructure: FormStructureInput = { inputs: [] }): Promise<FormStructure> {
+  const formSnippet = new FormSnippet(formStructure)
+  const savedForm = await formSnippet.save()
+  return savedForm as FormStructure
+}
+
+export function getFormSnippetStructure(formId: string, userId: string): Promise<Document> {
   return FormSnippet.findOne().exec()
 }

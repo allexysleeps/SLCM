@@ -1,4 +1,5 @@
 import {GraphQLResolverMap} from "apollo-graphql/src/schema/resolverMap"
+import {createFormSnippet} from "../dam/form-snippet"
 
 
 export const resolvers: GraphQLResolverMap<{}> = {
@@ -9,7 +10,7 @@ export const resolvers: GraphQLResolverMap<{}> = {
   },
   Mutation: {
     formSnippetAdd() {
-      return null
+      return createFormSnippet("id")
     }
   },
   FormSnippetQuery: {
