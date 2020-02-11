@@ -22,7 +22,6 @@ export const defaultTheme = {
 }
 
 
-
 const fetchData = (setState: Function) : EffectCallback => (): void => {
   graphqlClient.query({ query:  structureQuery })
     .then((data) => {
