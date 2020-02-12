@@ -25,8 +25,8 @@ export const createFormMutation = gql`
 `
 
 export const getFormQuery = gql`
-    query formSnippet($userId: String!, $formId: String!) {
-        formSnippet(userId: $userId, formId: $formId) {
+    query formSnippet($formId: String!) {
+        formSnippet(formId: $formId) {
             ...FormDataFields
         }
     }

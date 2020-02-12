@@ -89,6 +89,19 @@ describe('Form Snippet graphql', () => {
         }
       }
     })
+
+    const formQueryErrors = await getFormById("555555555555555555555555")
+      .catch((e) => e.graphQLErrors)
+
+    expect(formQueryErrors.length).toBe(1)
+
+    expect(formQueryErrors[0]).toMatchObject({
+      message: 'Form not found',
+      extensions: {
+        code: "BAD_USER_INPUT"
+      }
+    })
+
   })
 
   it('update form snippet', async () => {

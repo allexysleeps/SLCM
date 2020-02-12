@@ -1,4 +1,5 @@
 import { GraphQLResolverMap } from "apollo-graphql"
+import { UserInputError } from 'apollo-server-express'
 import { addFormSnippet, getFormSnippet } from "../dam/form-dam"
 import { FormSnippetDataInput, FormSnippetData } from "../types/form-types"
 
@@ -12,8 +13,12 @@ interface FormSnippetArgs {
 
 export const formResolvers: GraphQLResolverMap = {
   Query: {
-    formSnippet(obj, args: FormSnippetArgs) {
+    formSnippet: async (obj, args: FormSnippetArgs) => {
       const { formId } = args
+      const formSnippetData = await getFormSnippet("507f1f77bcf86cd799439011", formId)
+      if (!formSnippetData) {
+        throw new UserInputError("Form not found")
+      }
       return getFormSnippet("507f1f77bcf86cd799439011", formId)
     }
   },

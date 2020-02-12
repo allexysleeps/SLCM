@@ -42,7 +42,7 @@ mongoose.model('FormSnippet', FormSnippetSchema)
 
 const Form = mongoose.model('FormSnippet')
 
-export async function getFormSnippet(userId: string, formId: string): Promise<FormSnippetData> {
+export async function getFormSnippet(userId: string, formId: string): Promise<FormSnippetData | null> {
   const formData = await Form.findOne({
     _id: formId
   }).exec()
