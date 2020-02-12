@@ -41,3 +41,9 @@ export const updateFormMutation = gql`
     }
     ${formDataFields}
 `
+
+export const removeFormMutation = gql`
+    mutation formSnippetRemove($formId: String!) {
+        formSnippetRemove(formId: $formId)
+    }
+`

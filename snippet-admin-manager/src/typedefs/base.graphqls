@@ -1,5 +1,5 @@
 extend type Query {
-  formSnippet(userId: String!, formId: String!): FormSnippetData
+  formSnippet(formId: String!): FormSnippetData
 }
 
 extend type Mutation {

@@ -1,7 +1,8 @@
 import { isValidObjectId } from 'mongoose'
 import * as R from 'ramda'
+import { FetchResult } from "apollo-link"
 import { graphqlClient } from '../utils/graphqlClient'
-import {createFormMutation, getFormQuery, updateFormMutation} from "./queries"
+import {createFormMutation, getFormQuery, updateFormMutation, removeFormMutation} from "./queries"
 
 interface FormInputs {
   type: string
@@ -19,7 +20,18 @@ interface FormDataInput {
   structure: FormStructure
 }
 
+interface GraphqlResponse {
+  data: {
+    [operationName: string]: {
+      published: boolean
+      structure: FormStructure
+      id: string
+    }
+  }
+}
+
 describe('Form Snippet graphql', () => {
+
   const sampleFormData: FormDataInput = {
     published: false,
     structure: {
@@ -32,13 +44,29 @@ describe('Form Snippet graphql', () => {
     }
   }
 
-  it('create form snippet', async () => {
-    const response = await graphqlClient.mutate({
+  function createSampleForm(formData: FormDataInput = sampleFormData): Promise<FetchResult> {
+    return graphqlClient.mutate({
       mutation: createFormMutation,
       variables: {
-        formData: sampleFormData
+        formData
       }
     })
+  }
+
+  function getFormById(formId: string): Promise<FetchResult>  {
+    return graphqlClient.query({
+      query: getFormQuery,
+      variables: {
+        userId: "",
+        formId
+      }
+    })
+  }
+
+  const getFormId = (res: FetchResult): string => res.data.formSnippetAdd.id
+
+  it('create form snippet', async () => {
+    const response = await createSampleForm()
 
     expect(isValidObjectId(response.data.formSnippetAdd.id)).toBe(true)
 
@@ -50,35 +78,21 @@ describe('Form Snippet graphql', () => {
   })
 
   it('get form snippet', async () => {
-    const formId = await graphqlClient.mutate({
-      mutation: createFormMutation,
-      variables: {
-        formData: sampleFormData
-      }
-    }).then((res) => res.data.formSnippetAdd.id)
+    const formId = await createSampleForm().then(getFormId)
+    const formQueryResponse = await getFormById(formId)
 
-    const response = await graphqlClient.query({
-      query: getFormQuery,
-      variables: {
-        userId: "",
-        formId
-      }
-    })
-
-    expect(response).toMatchObject({
+    expect(formQueryResponse).toMatchObject({
       data: {
-        formSnippet: sampleFormData
+        formSnippet: {
+          ...sampleFormData,
+          id: formId
+        }
       }
     })
   })
 
   it('update form snippet', async () => {
-    const formId = await graphqlClient.mutate({
-      mutation: createFormMutation,
-      variables: {
-        formData: sampleFormData
-      }
-    }).then((res) => res.data.formSnippetAdd.id)
+    const formId = await createSampleForm().then(getFormId)
 
     const updatedFormData = R.evolve({
       inputs: R.append({
@@ -91,7 +105,7 @@ describe('Form Snippet graphql', () => {
     }, sampleFormData)
 
 
-    const response = await graphqlClient.mutate({
+    const updateMutationResponse = await graphqlClient.mutate({
       mutation: updateFormMutation,
       variables: {
         formId,
@@ -99,18 +113,40 @@ describe('Form Snippet graphql', () => {
       }
     })
 
-    expect(response).toMatchObject({
+    expect(updateMutationResponse).toMatchObject({
       data: {
-        formSnippet: updatedFormData
+        formSnippet: {
+          id: formId,
+          ...updatedFormData
+        }
       }
     })
 
-    const getResponse = await graphqlClient.query({
-      query: getFormQuery,
-      variables: {
-        userId: "",
-        formId
+    const formQueryResponse = await getFormById(formId)
+
+    expect(formQueryResponse).toMatchObject({
+      data: {
+        formSnippet: {
+          id: formId,
+          ...updatedFormData
+        }
       }
     })
+  })
+
+  it('remove form snippet', async () => {
+    const formId = await createSampleForm().then(getFormId)
+    const removeStatus = await graphqlClient.mutate({
+      mutation: removeFormMutation,
+      variables: {
+        formId
+      }
+    }).then((res) => res.data.formSnippetRemove)
+
+    expect(removeStatus).toBe(true)
+
+    const formQueryResponse = await getFormById(formId)
+    // todo check for graphql NOT_FOUND error assertions
+    expect(false).toBe(true)
   })
 })
