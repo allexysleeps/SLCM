@@ -2,23 +2,23 @@ import { GraphQLResolverMap } from "apollo-graphql"
 import { addFormSnippet, getFormSnippet } from "../dam/form-dam"
 import { FormSnippetDataInput, FormSnippetData } from "../types/form-types"
 
-interface formSnippetAddArgs {
+interface FormSnippetAddArgs {
   formData: FormSnippetDataInput
 }
-interface formSnippetArgs {
+interface FormSnippetArgs {
   formId: string
   userId: string
 }
 
 export const formResolvers: GraphQLResolverMap = {
   Query: {
-    formSnippet(obj, args: formSnippetArgs) {
+    formSnippet(obj, args: FormSnippetArgs) {
       const { formId } = args
       return getFormSnippet("507f1f77bcf86cd799439011", formId)
     }
   },
   Mutation: {
-    formSnippetAdd(obj, args: formSnippetAddArgs): Promise<FormSnippetData> {
+    formSnippetAdd(obj, args: FormSnippetAddArgs): Promise<FormSnippetData> {
       const { formData } = args
       return addFormSnippet("507f1f77bcf86cd799439011", formData)
     },

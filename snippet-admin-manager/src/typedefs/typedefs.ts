@@ -8,6 +8,6 @@ export const getTypeDefs = (): DocumentNode  => {
     const typesStr = fs.readFileSync(path.resolve(__dirname, 'base.graphqls'), 'utf-8')
     return gql(typesStr)
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }

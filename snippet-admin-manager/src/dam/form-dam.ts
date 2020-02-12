@@ -46,7 +46,7 @@ export async function getFormSnippet(userId: string, formId: string): Promise<Fo
   const formData = await Form.findOne({
     _id: formId
   }).exec()
-  
+
   return formData as unknown as FormSnippetData
 }
 
@@ -66,6 +66,6 @@ export function updateFormSnippet(userId: string, formId: string, formData: Form
   return null
 }
 
-export function deleteFormSnippet(userId: string, formId: string): Promise<Boolean> {
+export function deleteFormSnippet(userId: string, formId: string): Promise<boolean> {
   return null
 }

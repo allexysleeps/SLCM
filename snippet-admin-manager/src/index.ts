@@ -18,7 +18,7 @@ mongooseConnect(
   () => {
     app.listen(
       { port: 9001 },
-      () => console.log(`🚀 Server ready at http://localhost:9001${server.graphqlPath}`)
+      () => console.info(`🚀 Server ready at http://localhost:9001${server.graphqlPath}`)
     )
   }
 )

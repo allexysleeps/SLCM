@@ -1,11 +1,11 @@
 import mongoose from 'mongoose'
 
-export function mongooseConnect(onConnect: (...args: any[]) => void = () => {}) {
-  console.log('connecting to mongodb')
+export function mongooseConnect(onConnect: (...args: any[]) => void = () => null) {
+  console.info('connecting to mongodb')
   mongoose.connection
-    .on('error', (e) => console.log(e))
+    .on('error', (e) => console.error(e))
     .on('disconnected', (e) => {
-      console.log(e)
+      console.error(e)
     })
     .once('open', onConnect)
   return mongoose.connect('mongodb://localhost/snippets', {

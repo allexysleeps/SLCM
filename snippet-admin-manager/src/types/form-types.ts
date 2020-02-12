@@ -1,7 +1,7 @@
 export interface FormSnippetData {
-  id: String,
+  id: string,
   structure: FormStructure,
-  published: Boolean,
+  published: boolean,
 }
 
 export interface FormStructure {
