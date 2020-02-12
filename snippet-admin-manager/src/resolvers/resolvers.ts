@@ -1,5 +1,5 @@
 import * as R from 'ramda'
-import {GraphQLResolverMap} from "apollo-graphql/src/schema/resolverMap"
+import { GraphQLResolverMap } from "apollo-graphql"
 import { formResolvers } from './form-resolvers'
 
 

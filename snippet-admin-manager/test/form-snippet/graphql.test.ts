@@ -1,38 +1,25 @@
-import { gql } from 'apollo-boost'
 import { isValidObjectId } from 'mongoose'
 import { graphqlClient } from '../utils/graphqlClient'
+import { createFormMutation, getFormQuery } from "./queries"
 
 describe('Form Snippet graphql', () => {
-  it('create form snippet', async () => {
-    const createFormSnippet = gql`
-        mutation formSnippetAdd($formData: FormSnippetInput!) {
-            formSnippetAdd(formData: $formData) {
-                id
-                structure {
-                    inputs {
-                        type
-                        name
-                    }
-                }
-                published
-            }
-        }
-    `
-
-    const formData = {
-      published: false,
-      structure: {
-        inputs: [{
-          type: 'TEXT',
-          name: 'sample-input'
-        }]
-      }
+  const sampleFormData = {
+    published: false,
+    structure: {
+      inputs: [{
+        type: 'TEXT',
+        name: 'sample-input',
+        placeholder: 'sample-placeholder',
+        label: 'sample-label'
+      }]
     }
+  }
 
+  it('create form snippet', async () => {
     const response = await graphqlClient.mutate({
-      mutation: createFormSnippet,
+      mutation: createFormMutation,
       variables: {
-        formData
+        formData: sampleFormData
       }
     })
 
@@ -41,7 +28,34 @@ describe('Form Snippet graphql', () => {
     expect(response).toMatchObject({
       data: {
         formSnippetAdd: {
-          ...formData
+          ...sampleFormData
+        }
+      }
+    })
+  })
+
+  it('get form snippet', async () => {
+    const formId = await graphqlClient.mutate({
+      mutation: createFormMutation,
+      variables: {
+        formData: sampleFormData
+      }
+    }).then((response) => response.data.formSnippetAdd.id)
+
+    console.log(formId)
+
+    const response = await graphqlClient.query({
+      query: getFormQuery,
+      variables: {
+        userId: "",
+        formId
+      }
+    })
+
+    expect(response).toMatchObject({
+      data: {
+        formSnippet: {
+          ...sampleFormData
         }
       }
     })

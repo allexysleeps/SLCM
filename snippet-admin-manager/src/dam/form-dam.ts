@@ -40,14 +40,18 @@ const FormSnippetSchema = new Schema({
 
 mongoose.model('FormSnippet', FormSnippetSchema)
 
-const FormDam = mongoose.model('FormSnippet')
+const Form = mongoose.model('FormSnippet')
 
-export function getFormSnippet(userId: string, formId: string): Promise<Document> {
-  return FormDam.findOne().exec()
+export async function getFormSnippet(userId: string, formId: string): Promise<FormSnippetData> {
+  const formData = await Form.findOne({
+    _id: formId
+  }).exec()
+  
+  return formData as unknown as FormSnippetData
 }
 
 export async function addFormSnippet(userId: string, formData: FormSnippetDataInput): Promise<FormSnippetData> {
-  const formSnippet = new FormDam({
+  const formSnippet = new Form({
     ...formData,
     userId
   })
