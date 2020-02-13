@@ -1,6 +1,10 @@
 import mongoose, { Schema, Document } from 'mongoose'
 import { FormSnippetDataInput, FormStructure, InputType, FormSnippetData } from "../types/form-types"
 
+interface DBFormSnippetData extends Document, FormSnippetData {
+  id: string
+}
+
 const InputSchema = new Schema({
   type: {
     type: String,
@@ -40,14 +44,14 @@ const FormSnippetSchema = new Schema({
 
 mongoose.model('FormSnippet', FormSnippetSchema)
 
-const Form = mongoose.model('FormSnippet')
+const Form = mongoose.model<DBFormSnippetData>('FormSnippet')
 
 export async function getFormSnippet(userId: string, formId: string): Promise<FormSnippetData | null> {
-  const formData = await Form.findOne({
+  const formData: DBFormSnippetData = await Form.findOne({
     _id: formId
   }).exec()
 
-  return formData as unknown as FormSnippetData
+  return formData as FormSnippetData
 }
 
 export async function addFormSnippet(userId: string, formData: FormSnippetDataInput): Promise<FormSnippetData> {
