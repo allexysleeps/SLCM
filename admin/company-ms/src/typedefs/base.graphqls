@@ -1,0 +1,17 @@
+extend type Query {
+  company: 
+}
+
+type Company {
+  name: String
+  description: String
+  snippets: Snippets
+}
+
+type Snippets {
+  formSnippets: [FormSnippet!]! @provides (fields: "id")
+}
+
+extend type FormSnippet @key (fields: "id") {
+  id: String @external
+}

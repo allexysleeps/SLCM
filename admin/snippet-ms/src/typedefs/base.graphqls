@@ -1,10 +1,10 @@
 extend type Query {
-  formSnippet(formId: String!): FormSnippetData
+  formSnippet(formId: String!): FormSnippet
 }
 
 extend type Mutation {
-  formSnippetAdd(formData: FormSnippetInput!): FormSnippetData
-  formSnippetUpdate(formId: String, formData: FormSnippetInput): FormSnippetData
+  formSnippetAdd(formData: FormSnippetInput!): FormSnippet
+  formSnippetUpdate(formId: String, formData: FormSnippetInput): FormSnippet
   formSnippetRemove(formId: String): Boolean
 }
 
@@ -28,7 +28,7 @@ type FormSnippetStructure {
   inputs: [InputStructure]!
 }
 
-type FormSnippetData {
+type FormSnippet {
   id: String
   structure: FormSnippetStructure
   published: Boolean
