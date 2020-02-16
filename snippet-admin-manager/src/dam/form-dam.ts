@@ -66,10 +66,19 @@ export async function addFormSnippet(userId: string, formData: FormSnippetDataIn
   }
 }
 
-export function updateFormSnippet(userId: string, formId: string, formData: FormSnippetDataInput): Promise<FormStructure> {
-  return null
+export async function updateFormSnippet(formId: string, formData: FormSnippetDataInput): Promise<FormSnippetData> {
+  const updatedFormSnippet = await Form.findOneAndUpdate({
+    _id: formId
+  }, formData, { new: true }).exec()
+
+  return updatedFormSnippet as FormSnippetData
+
 }
 
-export function deleteFormSnippet(userId: string, formId: string): Promise<boolean> {
-  return null
+export async function removeFormSnippet(formId: string): Promise<boolean> {
+  await Form.deleteOne({
+    _id: formId
+  }).exec()
+
+  return true
 }

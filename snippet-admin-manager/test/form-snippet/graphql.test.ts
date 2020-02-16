@@ -108,15 +108,16 @@ describe('Form Snippet graphql', () => {
     const formId = await createSampleForm().then(getFormId)
 
     const updatedFormData = R.evolve({
-      inputs: R.append({
-        type: 'EMAIL',
-        name: 'sample-email',
-        placeholder: 'sample-placeholder',
-        label: 'sample-label'
-      }),
+      structure: {
+        inputs: R.append({
+          type: 'EMAIL',
+          name: 'sample-email',
+          placeholder: 'sample-placeholder',
+          label: 'sample-label'
+        })
+      },
       published: R.always(true)
     }, sampleFormData)
-
 
     const updateMutationResponse = await graphqlClient.mutate({
       mutation: updateFormMutation,
@@ -128,7 +129,7 @@ describe('Form Snippet graphql', () => {
 
     expect(updateMutationResponse).toMatchObject({
       data: {
-        formSnippet: {
+        formSnippetUpdate: {
           id: formId,
           ...updatedFormData
         }
@@ -158,8 +159,15 @@ describe('Form Snippet graphql', () => {
 
     expect(removeStatus).toBe(true)
 
-    const formQueryResponse = await getFormById(formId)
-    // todo check for graphql NOT_FOUND error assertions
-    expect(false).toBe(true)
+    const formQueryErrors = await getFormById(formId).catch((e) => e.graphQLErrors)
+
+    expect(formQueryErrors.length).toBe(1)
+
+    expect(formQueryErrors[0]).toMatchObject({
+      message: 'Form not found',
+      extensions: {
+        code: "BAD_USER_INPUT"
+      }
+    })
   })
 })
